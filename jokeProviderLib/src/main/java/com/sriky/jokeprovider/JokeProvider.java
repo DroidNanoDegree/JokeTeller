@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.sriky.jokeproviderlib;
+package com.sriky.jokeprovider;
 
 public class JokeProvider {
 
     /**
      * Get a joke.
+     *
      * @return A funny joke.
      */
     public String getJoke() {

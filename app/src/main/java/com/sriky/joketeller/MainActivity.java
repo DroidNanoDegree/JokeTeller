@@ -6,10 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.sriky.jokeproviderandroidlib.JokeActivity;
-import com.sriky.jokeproviderlib.JokeProvider;
+import com.sriky.jokeprovider.JokeProvider;
 
 
 public class MainActivity extends AppCompatActivity {
