@@ -16,29 +16,23 @@
 package com.sriky.jokedisplay;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
-
-import com.sriky.jokedisplay.databinding.ActivityJokeBinding;
+import android.widget.TextView;
 
 public class JokeActivity extends AppCompatActivity {
 
     public static final String JOKE_INTENT_BUNDLE_KEY = "joke_bundle_key";
 
-    private ActivityJokeBinding mActivityJokeBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_joke);
-
-        mActivityJokeBinding = DataBindingUtil.setContentView(JokeActivity.this,
-                R.layout.activity_joke);
+        setContentView(R.layout.activity_joke);
 
         //add support for back-key navigation.
         ActionBar actionBar = getSupportActionBar();
@@ -58,7 +52,8 @@ public class JokeActivity extends AppCompatActivity {
             throw new RuntimeException("Joke String extra cannot be empty!");
         }
 
-        mActivityJokeBinding.tvJoke.setText(joke);
+        TextView jokeView = findViewById(R.id.tv_joke);
+        jokeView.setText(joke);
     }
 
     @Override
