@@ -7,8 +7,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.sriky.jokeproviderlib.JokeProvider;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,5 +47,14 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
     }
 
+    public void tellJokeFromJavaLib(View view) {
+        JokeProvider jokeProvider = new JokeProvider();
 
+        //cancel old toast if any!
+        if (mToast != null) {
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(this, jokeProvider.getJoke(), Toast.LENGTH_SHORT);
+        mToast.show();
+    }
 }

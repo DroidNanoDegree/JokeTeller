@@ -30,6 +30,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    /* Adding dependency to "jokeProviderLib" */
+    implementation project(':jokeProviderLib')
+
+    /* AppCompact support lib */
     implementation "com.android.support:appcompat-v7:${supportLibVersion}"
+    /* Ads lib */
     implementation 'com.google.android.gms:play-services-ads:11.6.2'
 }
