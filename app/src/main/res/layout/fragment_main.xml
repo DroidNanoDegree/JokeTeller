@@ -33,24 +33,4 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
 
-    <Button
-        android:id="@+id/btn_jokeFromJavaLib"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_joke_from_java_lib_label"
-        android:text="@string/button_text"
-        android:onClick="tellJokeFromJavaLib"/>
-
-    <TextView
-        android:id="@+id/tv_joke_from_java_lib_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button2"
-        android:layout_marginTop="29dp"
-        android:text="@string/display_joke_from_java_lib" />
-
 </RelativeLayout>

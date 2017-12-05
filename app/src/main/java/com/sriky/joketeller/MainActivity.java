@@ -44,10 +44,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
-    }
-
-    public void tellJokeFromJavaLib(View view) {
         JokeProvider jokeProvider = new JokeProvider();
 
         //cancel old toast if any!
