@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.sriky.jokeproviderandroidlib;
+package com.sriky.jokedisplay;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import com.sriky.jokeproviderandroidlib.databinding.ActivityJokeBinding;
+import com.sriky.jokedisplay.databinding.ActivityJokeBinding;
 
 public class JokeActivity extends AppCompatActivity {
 
@@ -54,7 +54,7 @@ public class JokeActivity extends AppCompatActivity {
         }
 
         String joke = intent.getStringExtra(JOKE_INTENT_BUNDLE_KEY);
-        if(TextUtils.isEmpty(joke)) {
+        if (TextUtils.isEmpty(joke)) {
             throw new RuntimeException("Joke String extra cannot be empty!");
         }
 

@@ -34,7 +34,7 @@ dependencies {
     implementation project(':jokeProviderLib')
 
     /* Adding dependency to "jokeProviderAndroidLib" */
-    implementation project(':jokeProviderAndroidLib')
+    implementation project(':jokeDisplayAndroidLib')
 
     /* AppCompact support lib */
     implementation "com.android.support:appcompat-v7:${supportLibVersion}"

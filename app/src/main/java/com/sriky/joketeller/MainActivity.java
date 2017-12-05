@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.sriky.jokeproviderandroidlib.JokeActivity;
+import com.sriky.jokedisplay.JokeActivity;
 import com.sriky.jokeprovider.JokeProvider;
 
 

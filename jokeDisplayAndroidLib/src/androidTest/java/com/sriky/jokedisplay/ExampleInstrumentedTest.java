@@ -13,20 +13,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.sriky.jokeproviderandroidlib;
+package com.sriky.jokedisplay;
+
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
+ * Instrumented test, which will execute on an Android device.
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+@RunWith(AndroidJUnit4.class)
+public class ExampleInstrumentedTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void useAppContext() throws Exception {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+
+        assertEquals("com.sriky.jokeproviderandroidlib.test", appContext.getPackageName());
     }
 }

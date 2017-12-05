@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 Srikanth Basappa
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +20,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.sriky.jokeproviderandroidlib.JokeActivity">
+        tools:context="com.sriky.jokedisplay.JokeActivity">
 
         <TextView
             android:id="@+id/tv_joke"

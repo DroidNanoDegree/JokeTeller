@@ -32,7 +32,7 @@
         </activity>
 
         <!-- JokeActivity from the Android Lib -->
-        <activity android:name="com.sriky.jokeproviderandroidlib.JokeActivity"
+        <activity android:name="com.sriky.jokedisplay.JokeActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
