@@ -1,5 +1,6 @@
 package com.sriky.joketeller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -7,12 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.sriky.jokeproviderandroidlib.JokeActivity;
 import com.sriky.jokeproviderlib.JokeProvider;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +46,8 @@ public class MainActivity extends AppCompatActivity {
     public void tellJoke(View view) {
         JokeProvider jokeProvider = new JokeProvider();
 
-        //cancel old toast if any!
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        mToast = Toast.makeText(this, jokeProvider.getJoke(), Toast.LENGTH_SHORT);
-        mToast.show();
+        Intent intent = new Intent(MainActivity.this, JokeActivity.class);
+        intent.putExtra(JokeActivity.JOKE_INTENT_BUNDLE_KEY, jokeProvider.getJoke());
+        startActivity(intent);
     }
 }
