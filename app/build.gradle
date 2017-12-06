@@ -26,6 +26,7 @@ android {
 
 ext {
     supportLibVersion = '27.0.1'
+    googleApiClientVersion = '1.23.0'
 }
 
 dependencies {
@@ -33,7 +34,8 @@ dependencies {
 
     /* backend */
     endpointsServer project(path: ':backend', configuration: 'endpoints')
-    implementation "com.google.api-client:google-api-client:1.23.0"
+    implementation "com.google.api-client:google-api-client:${googleApiClientVersion}"
+    implementation "com.google.http-client:google-http-client-android:${googleApiClientVersion}"
 
     /* Adding dependency to "jokeProviderLib" */
     implementation project(':jokeProviderLib')
@@ -56,5 +58,4 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
     })
-    compile 'com.google.http-client:google-http-client-android:1.23.0'
 }
