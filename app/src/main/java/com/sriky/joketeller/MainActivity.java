@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             try {
-                return myApiService.sayHi("It is working, are you joking??? No! HAHHAHAHA!!!").execute().getData();
+                return myApiService.getJoke().execute().getData();
             } catch (IOException e) {
                 return e.getMessage();
             }
