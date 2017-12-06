@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
 
 android {
     compileSdkVersion 27
@@ -30,11 +31,18 @@ ext {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    /* backend */
+    endpointsServer project(path: ':backend', configuration: 'endpoints')
+    implementation "com.google.api-client:google-api-client:1.23.0"
+
     /* Adding dependency to "jokeProviderLib" */
     implementation project(':jokeProviderLib')
 
     /* Adding dependency to "jokeProviderAndroidLib" */
     implementation project(':jokeDisplayAndroidLib')
+
+    /* Timber dependencies used for logging */
+    implementation 'com.jakewharton.timber:timber:4.6.0'
 
     /* AppCompact support lib */
     implementation "com.android.support:appcompat-v7:${supportLibVersion}"
@@ -46,5 +54,7 @@ dependencies {
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
+    compile 'com.google.http-client:google-http-client-android:1.23.0'
 }
