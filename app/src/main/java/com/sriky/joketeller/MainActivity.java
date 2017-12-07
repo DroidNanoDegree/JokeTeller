@@ -3,6 +3,9 @@ package com.sriky.joketeller;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -28,6 +31,10 @@ import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    // the idling resource used for UI testing.
+    @Nullable
+    private JokeTellerIdlingResource mIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Create or returns an instance of idling resource to test {@link MainActivity}
+     *
+     * @return {@link JokeTellerIdlingResource} instance.
+     */
+    @VisibleForTesting
+    @NonNull
+    public JokeTellerIdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new JokeTellerIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
     public void tellJoke(View view) {
         new FetchJokeTask().execute();
     }
@@ -66,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
     class FetchJokeTask extends AsyncTask<Void, Void, String> {
 
         private MyApi myApiService = null;
+
+        @Override
+        protected void onPreExecute() {
+            //set idling resource state to not idle.
+            getIdlingResource().setIdleState(false);
+        }
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -96,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            //set idling resource state to idle.
+            getIdlingResource().setIdleState(true);
+
             if(TextUtils.isEmpty(s)) {
                 Timber.e("No joke returned from server!!!");
                 return;
