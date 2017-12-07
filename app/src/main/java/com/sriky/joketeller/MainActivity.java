@@ -11,26 +11,28 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.sriky.jokedisplay.JokeActivity;
-import com.sriky.jokeprovider.JokeProvider;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 
 import timber.log.Timber;
 
-
 public class MainActivity extends AppCompatActivity {
+
+    private static final String POWERED_BY = ": Powered by";
+
+    private ProgressBar mProgressBar;
+    private TextView mErrorView;
+    private Button mFetchJokeBtn;
 
     // the idling resource used for UI testing.
     @Nullable
@@ -41,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Timber.plant(new Timber.DebugTree());
+
+        mProgressBar = findViewById(R.id.progressBar);
+        mErrorView = findViewById(R.id.tv_error_msg);
+        mFetchJokeBtn = findViewById(R.id.btn_fetchJoke);
     }
 
 
@@ -90,13 +96,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            //disable the fetch joke button.
+            mFetchJokeBtn.setEnabled(false);
+            //show the progress bar.
+            mProgressBar.setVisibility(View.VISIBLE);
+            //hide the error text view.
+            mErrorView.setVisibility(View.INVISIBLE);
+
             //set idling resource state to not idle.
             getIdlingResource().setIdleState(false);
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-            if(myApiService == null) {  // Only do this once
+            if (myApiService == null) {  // Only do this once
                 MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                         new AndroidJsonFactory(), null)
                         // options for running against local devappserver
@@ -123,17 +136,28 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            //disable the fetch joke button.
+            mFetchJokeBtn.setEnabled(true);
+            //show the progress bar.
+            mProgressBar.setVisibility(View.INVISIBLE);
             //set idling resource state to idle.
             getIdlingResource().setIdleState(true);
 
-            if(TextUtils.isEmpty(s)) {
+            if (TextUtils.isEmpty(s)) {
                 Timber.e("No joke returned from server!!!");
                 return;
             }
 
-            Intent intent = new Intent(MainActivity.this, JokeActivity.class);
-            intent.putExtra(JokeActivity.JOKE_INTENT_BUNDLE_KEY, s);
-            startActivity(intent);
+            String[] jokeData = s.split(POWERED_BY);
+
+            if (jokeData.length > 1) {
+                Intent intent = new Intent(MainActivity.this, JokeActivity.class);
+                intent.putExtra(JokeActivity.JOKE_INTENT_BUNDLE_KEY, jokeData[0]);
+                startActivity(intent);
+            } else {
+                Timber.e("Error getting jokes: %s", s);
+                mErrorView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
