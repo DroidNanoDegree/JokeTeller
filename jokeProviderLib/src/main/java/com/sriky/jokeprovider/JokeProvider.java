@@ -15,7 +15,18 @@
 
 package com.sriky.jokeprovider;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class JokeProvider {
+
+    private static final String[] JOKES = {
+            "A Mexican magician says he will disappear on the count of 3. He says \"uno, dos...\" poof. He disappeared without a tres.",
+            "The Secret Service just had to change protocol for when the president is in danger. Instead of yelling \"get down!\", they have to yell \"Donald, duck!\"",
+            "How does a rabbi make his coffee?\n - Hebrews it.",
+            "What do you call a dog that does magic tricks?\n - A labracadabrador.",
+            "Dr Frankenstein entered a body building contest. Upon arrival he realised he misunderstood the objective."};
+
+    private static final String POWERED_BY = ": Powered by[JokeTeller JavaLib]";
 
     /**
      * Get a joke.
@@ -23,6 +34,7 @@ public class JokeProvider {
      * @return A funny joke.
      */
     public String getJoke() {
-        return "Joke retrieved from the jokeproviderlib (Java Lib)!";
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
+        return JOKES[randomNum] + POWERED_BY;
     }
 }
