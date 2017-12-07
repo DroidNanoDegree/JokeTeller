@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion '27.0.1'
 
     defaultConfig {
-        applicationId "com.udacity.gradle.builditbigger"
+        applicationId "com.sriky.joketeller"
         minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 100
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -18,13 +19,88 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions 'tier'
+    productFlavors {
+        free {
+            dimension "tier"
+            applicationId 'com.sriky.joketeller.free'
+            dependencies {
+                /* Ads lib */
+                implementation 'com.google.android.gms:play-services-ads:11.6.2'
+            }
+        }
+
+        paid {
+            dimension "tier"
+            applicationId 'com.sriky.joketeller.paid'
+        }
+    }
+
+    /* enable data binding */
+    dataBinding.enabled = true
 }
 
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /* backend */
+    endpointsServer project(path: ':backend', configuration: 'endpoints')
+    implementation "com.google.api-client:google-api-client:${rootProject.ext.googleApiClientVersion}"
+    implementation "com.google.http-client:google-http-client-android:${rootProject.ext.googleApiClientVersion}"
+
+    /* Adding dependency to "jokeProviderAndroidLib" */
+    implementation project(':jokeDisplayAndroidLib')
+
+    /* Timber dependencies used for logging */
+    implementation 'com.jakewharton.timber:timber:4.6.0'
+
+    /* AppCompact support lib */
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:support-media-compat:${rootProject.ext.supportLibVersion}"
+
+    implementation "com.google.code.findbugs:jsr305:3.0.1"
+
+    /* Constraint layout */
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    /* Idling resources */
+    implementation "com.android.support.test.espresso:espresso-idling-resource:${rootProject.ext.espressoLibVersion}"
+
+    /* For testing */
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.androidTestLibVersion}"
+    androidTestImplementation "com.android.support.test:rules:${rootProject.ext.androidTestLibVersion}"
+    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.androidTestLibVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoLibVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoLibVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:${rootProject.ext.espressoLibVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:${rootProject.ext.espressoLibVersion}"
+    androidTestImplementation "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.google.android.gms:play-services-ads:9.8.0'
+}
+
+task runTests(type:Exec) {
+    //dependsOn ':app:assemble'
+
+    workingDir '../'
+
+    commandLine './gradlew', 'appengineStart'
+
+    commandLine './gradlew', 'connectedAndroidTest'
+
+    commandLine './gradlew', 'appengineStop'
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method stopTomcat.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
 }
