@@ -34,6 +34,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasShortClassName;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -43,9 +44,6 @@ import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class JokeTellerIntentTests {
-
-    private static final String INTENT_EXTRA_JOKE =
-            "Joke retrieved from the jokeproviderlib (Java Lib)!";
 
     @Rule
     public IntentsTestRule<MainActivity> mActivityRule = new IntentsTestRule<>(
@@ -68,8 +66,6 @@ public class JokeTellerIntentTests {
     public void test_JokeRetrievalFromAsyncTask() {
         onView(withId(R.id.btn_fetchJoke)).perform(click());
 
-        intended(allOf(
-                hasComponent(hasShortClassName(".JokeActivity")),
-                hasExtra(JokeActivity.JOKE_INTENT_BUNDLE_KEY, INTENT_EXTRA_JOKE)));
+        intended(hasExtraWithKey(JokeActivity.JOKE_INTENT_BUNDLE_KEY));
     }
 }
