@@ -34,6 +34,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions 'tier'
+    productFlavors {
+        free {
+            dimension "tier"
+            dependencies {
+                /* Ads lib */
+                implementation 'com.google.android.gms:play-services-ads:11.6.2'
+            }
+        }
+
+        paid {
+            dimension "tier"
+        }
+    }
 }
 
 dependencies {
