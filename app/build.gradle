@@ -100,22 +100,23 @@ def getIP() {
     return (result != null ? result : InetAddress.getLocalHost()).getHostAddress();
 }
 
-task runTests(type:Exec) {
-    //dependsOn ':app:assemble'
-
-    workingDir '../'
-
-    commandLine './gradlew', 'appengineStart'
-
-    commandLine './gradlew', 'connectedAndroidTest'
-
-    commandLine './gradlew', 'appengineStop'
-
-    //store the output instead of printing to the console:
-    standardOutput = new ByteArrayOutputStream()
-
-    //extension method stopTomcat.output() can be used to obtain the output:
-    ext.output = {
-        return standardOutput.toString()
-    }
+task runTests {
+    dependsOn (['startBackend','runConnectedTests','shutdownBackend'])
 }
+
+task startBackend {
+    dependsOn ':backend:appengineRun'
+    evaluationDependsOn(":backend")
+    project(':backend').appengine.daemon = true
+}
+
+task runConnectedTests {
+    dependsOn ':app:connectedAndroidTest'
+    mustRunAfter "startBackend"
+}
+
+task shutdownBackend {
+    dependsOn ':backend:appengineStop'
+    mustRunAfter "runConnectedTests"
+}
+
