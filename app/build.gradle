@@ -13,7 +13,12 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField 'String', 'URL_SERVER', "\"http://${getIP()}\""
+        }
         release {
+            //TODO: THIS SHOULD BE REAL ADDRESS IN PRODUCTION
+            buildConfigField 'String', 'URL_SERVER', "\"http://${getIP()}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -74,6 +79,25 @@ dependencies {
     implementation 'com.google.http-client:google-http-client-android:1.23.0'
     implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation files('myApi-v1-1.23.0-SNAPSHOT.jar')
+}
+
+def getIP() {
+    InetAddress result = null;
+    Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+    while (interfaces.hasMoreElements()) {
+        Enumeration<InetAddress> addresses = interfaces.nextElement().getInetAddresses();
+        while (addresses.hasMoreElements()) {
+            InetAddress address = addresses.nextElement();
+            if (!address.isLoopbackAddress()) {
+                if (address.isSiteLocalAddress()) {
+                    return address.getHostAddress();
+                } else if (result == null) {
+                    result = address;
+                }
+            }
+        }
+    }
+    return (result != null ? result : InetAddress.getLocalHost()).getHostAddress();
 }
 
 task runTests(type:Exec) {
