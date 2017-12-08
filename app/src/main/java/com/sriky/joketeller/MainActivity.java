@@ -110,11 +110,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             if (myApiService == null) {  // Only do this once
+                String backendUrl = BuildConfig.URL_SERVER + ":8080/_ah/api/";
+                Timber.i("URL_SERVER: %s", backendUrl);
                 MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                         new AndroidJsonFactory(), null)
                         // options for running against local devappserver
-                        //TODO: make it work on android device.
-                        .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                        .setRootUrl(backendUrl)
                         .setApplicationName(getString(R.string.app_name))
                         .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                             @Override
