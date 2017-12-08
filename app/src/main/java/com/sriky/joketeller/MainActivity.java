@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         new AndroidJsonFactory(), null)
                         // options for running against local devappserver
                         //TODO: make it work on android device.
-                        .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                        .setRootUrl("http://192.168.1.7:8080/_ah/api/")
                         .setApplicationName(getString(R.string.app_name))
                         .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                             @Override
