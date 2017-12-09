@@ -1,7 +1,6 @@
 package com.sriky.joketeller;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,21 +14,20 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.sriky.jokedisplay.JokeActivity;
-import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
+import com.sriky.joketeller.event.Message;
+import com.sriky.joketeller.task.FetchJokeAsyncTask;
 
-import java.io.IOException;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String POWERED_BY = ": Powered by";
-
+    private static final String END_POINT_URL = BuildConfig.URL_SERVER + ":8080/_ah/api/";
     private ProgressBar mProgressBar;
     private TextView mErrorView;
     private Button mFetchJokeBtn;
@@ -49,6 +47,17 @@ public class MainActivity extends AppCompatActivity {
         mFetchJokeBtn = findViewById(R.id.btn_fetchJoke);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,79 +95,48 @@ public class MainActivity extends AppCompatActivity {
         return mIdlingResource;
     }
 
-    public void tellJoke(View view) {
-        new FetchJokeTask().execute();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPreExecute(Message.FetchJokeAsyncTaskOnPreExecute event) {
+        //disable the fetch joke button.
+        mFetchJokeBtn.setEnabled(false);
+        //show the progress bar.
+        mProgressBar.setVisibility(View.VISIBLE);
+        //hide the error text view.
+        mErrorView.setVisibility(View.INVISIBLE);
+
+        //set idling resource state to not idle.
+        getIdlingResource().setIdleState(false);
     }
 
-    class FetchJokeTask extends AsyncTask<Void, Void, String> {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostExecute(Message.FetchJokeAsyncTaskOnPostExecute event) {
+        String result = event.getResult();
 
-        private MyApi myApiService = null;
+        //disable the fetch joke button.
+        mFetchJokeBtn.setEnabled(true);
+        //show the progress bar.
+        mProgressBar.setVisibility(View.INVISIBLE);
+        //set idling resource state to idle.
+        getIdlingResource().setIdleState(true);
 
-        @Override
-        protected void onPreExecute() {
-            //disable the fetch joke button.
-            mFetchJokeBtn.setEnabled(false);
-            //show the progress bar.
-            mProgressBar.setVisibility(View.VISIBLE);
-            //hide the error text view.
-            mErrorView.setVisibility(View.INVISIBLE);
-
-            //set idling resource state to not idle.
-            getIdlingResource().setIdleState(false);
+        if (TextUtils.isEmpty(result)) {
+            Timber.e("No joke returned from server!!!");
+            return;
         }
 
-        @Override
-        protected String doInBackground(Void... voids) {
-            if (myApiService == null) {  // Only do this once
-                String backendUrl = BuildConfig.URL_SERVER + ":8080/_ah/api/";
-                Timber.i("URL_SERVER: %s", backendUrl);
-                MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                        new AndroidJsonFactory(), null)
-                        // options for running against local devappserver
-                        .setRootUrl(backendUrl)
-                        .setApplicationName(getString(R.string.app_name))
-                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                            @Override
-                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                                abstractGoogleClientRequest.setDisableGZipContent(true);
-                            }
-                        });
-                // end options for devappserver
+        String[] jokeData = result.split(POWERED_BY);
 
-                myApiService = builder.build();
-            }
-
-            try {
-                return myApiService.getJoke().execute().getData();
-            } catch (IOException e) {
-                return e.getMessage();
-            }
+        if (jokeData.length > 1) {
+            Intent intent = new Intent(MainActivity.this, JokeActivity.class);
+            intent.putExtra(JokeActivity.JOKE_INTENT_BUNDLE_KEY, jokeData[0]);
+            startActivity(intent);
+        } else {
+            Timber.e("Error getting jokes: %s", result);
+            mErrorView.setVisibility(View.VISIBLE);
         }
+    }
 
-        @Override
-        protected void onPostExecute(String s) {
-            //disable the fetch joke button.
-            mFetchJokeBtn.setEnabled(true);
-            //show the progress bar.
-            mProgressBar.setVisibility(View.INVISIBLE);
-            //set idling resource state to idle.
-            getIdlingResource().setIdleState(true);
-
-            if (TextUtils.isEmpty(s)) {
-                Timber.e("No joke returned from server!!!");
-                return;
-            }
-
-            String[] jokeData = s.split(POWERED_BY);
-
-            if (jokeData.length > 1) {
-                Intent intent = new Intent(MainActivity.this, JokeActivity.class);
-                intent.putExtra(JokeActivity.JOKE_INTENT_BUNDLE_KEY, jokeData[0]);
-                startActivity(intent);
-            } else {
-                Timber.e("Error getting jokes: %s", s);
-                mErrorView.setVisibility(View.VISIBLE);
-            }
-        }
+    public void tellJoke(View view) {
+        new FetchJokeAsyncTask().execute(END_POINT_URL);
     }
 }
