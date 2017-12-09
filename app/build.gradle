@@ -31,7 +31,7 @@ android {
             applicationId 'com.sriky.joketeller.free'
             dependencies {
                 /* Ads lib */
-                implementation 'com.google.android.gms:play-services-ads:11.6.2'
+                freeImplementation 'com.google.android.gms:play-services-ads:11.6.2'
             }
         }
 
