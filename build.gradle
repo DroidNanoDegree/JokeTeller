@@ -25,6 +25,6 @@ ext {
     googleApiClientVersion = '1.23.0'
     espressoLibVersion = '3.0.1'
     androidTestLibVersion = '1.0.1'
-    compileSdkVersion =  27
-    targetSdkVersion = 27
+    compileSdkVersion =  26
+    targetSdkVersion = 26
 }
