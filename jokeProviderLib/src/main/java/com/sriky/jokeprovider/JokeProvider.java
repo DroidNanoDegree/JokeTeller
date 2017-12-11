@@ -27,6 +27,8 @@ public class JokeProvider {
             "Dr Frankenstein entered a body building contest.\n\n Upon arrival he realised he misunderstood the objective."};
 
     private static final String POWERED_BY = ": Powered by[JokeTeller JavaLib]";
+    private static final int RANDOM_NUM_START_IDX = 0;
+    private static final int RANDOM_NUM_END_INDEX = JOKES.length - 1;
 
     /**
      * Get a joke.
@@ -34,7 +36,7 @@ public class JokeProvider {
      * @return A funny joke.
      */
     public String getJoke() {
-        int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
+        int randomNum = ThreadLocalRandom.current().nextInt(RANDOM_NUM_START_IDX, RANDOM_NUM_END_INDEX);
         return JOKES[randomNum] + POWERED_BY;
     }
 }
