@@ -44,6 +44,7 @@ import static junit.framework.Assert.assertTrue;
 public class JokeTellerIntentTests {
     private static final String END_POINT_URL = BuildConfig.URL_SERVER + ":8080/_ah/api/";
     private static final String POWERED_BY = ": Powered by[JokeTeller JavaLib]";
+    private static final int SIGNAL_COUNT = 1;
     CountDownLatch mSignal = null;
     private FetchJokeAsyncTask mFetchJokeTask;
     private String mResult = null;
@@ -51,7 +52,7 @@ public class JokeTellerIntentTests {
     @Before
     public void startUp() {
         mFetchJokeTask = new FetchJokeAsyncTask();
-        mSignal = new CountDownLatch(1);
+        mSignal = new CountDownLatch(SIGNAL_COUNT);
         EventBus.getDefault().register(this);
     }
 
@@ -62,7 +63,7 @@ public class JokeTellerIntentTests {
     }
 
     @Test
-    public void test_JokeRetrievalFromAsyncTask() {
+    public void testA_jokeRetrievalFromAsyncTask() {
         try {
             mFetchJokeTask.execute(END_POINT_URL);
             mSignal.await();
